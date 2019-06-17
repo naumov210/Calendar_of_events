@@ -1,17 +1,20 @@
-function createCalendar_1(myClass, year, month) {
-    var elem = document.getElementsByClassName(myClass)[0];
+function createCalendar(myClass, year, month) {
+    titleMonth.innerHTML = 'June';
 
-    var mon = month - 1; // месяцы в JS идут от 0 до 11, а не от 1 до 12
-    var d = new Date(year, mon);
-
-    var table = '<table><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
-
+    let elem = document.getElementsByClassName(myClass)[0],
+        mon = month,
+        d = new Date(year, mon),
+        table = '<table><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
+        
+        
     // заполнить первый ряд от понедельника
     // и до дня, с которого начинается месяц
     // * * * | 1  2  3  4
     for (var i = 0; i < getDay(d); i++) {
         table += '<td></td>';
     }
+
+    console.log(getDay(d));
 
     // ячейки календаря с датами
     while (d.getMonth() == mon) {
@@ -45,106 +48,53 @@ function getDay(date) { // получить номер дня недели, от
 }
 
 
-function createCalendar_2(myClass, year, month) {
-    var elem = document.getElementsByClassName(myClass)[0];
+// расчёт даты для передачи в функцию создания календаря
+let now = new Date(),
+    year = now.getFullYear(),
+    month = now.getMonth();
 
-    var mon = month - 1; // месяцы в JS идут от 0 до 11, а не от 1 до 12
-    var d = new Date(year, mon);
+// кНопки
+let btnPrev = document.querySelectorAll(".btn")[0],
+    btnCurrent = document.querySelectorAll(".btn")[1],
+    btnNext = document.querySelectorAll(".btn")[2];
 
-    var table = '<table><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
+let titleMonth = document.getElementsByClassName("title")[0];
 
-    // заполнить первый ряд от понедельника
-    // и до дня, с которого начинается месяц
-    // * * * | 1  2  3  4
-    for (var i = 0; i < getDay(d); i++) {
-        table += '<td></td>';
+
+function monthTogglePrev() {
+    if (btnPrev.click) {
+        month = now.getMonth()-1;
+        createCalendar("calendar", year, month);
+        titleMonth.innerHTML = 'May';
     }
-
-    // ячейки календаря с датами
-    while (d.getMonth() == mon) {
-        table += '<td>' + d.getDate() + '</td>';
-
-        if (getDay(d) % 7 == 6) { // вс, последний день - перевод строки
-            table += '</tr><tr>';
-        }
-
-        d.setDate(d.getDate() + 1);
-    }
-
-    // добить таблицу пустыми ячейками, если нужно
-    if (getDay(d) != 0) {
-        for (var i = getDay(d); i < 7; i++) {
-            table += '<td></td>';
-        }
-    }
-
-    // закрыть таблицу
-    table += '</tr></table>';
-
-    // только одно присваивание innerHTML
-    elem.innerHTML = table;
 }
 
-function getDay(date) { // получить номер дня недели, от 0(пн) до 6(вс)
-    var day = date.getDay();
-    if (day == 0) day = 7;
-    return day - 1;
+function monthToggleCurrent() {
+    if (btnCurrent.click) {
+        month = now.getMonth();
+        createCalendar("calendar", year, month);
+        titleMonth.innerHTML = 'June';
+    }
 }
 
-
-function createCalendar_3(myClass, year, month) {
-    var elem = document.getElementsByClassName(myClass)[0];
-
-    var mon = month - 1; // месяцы в JS идут от 0 до 11, а не от 1 до 12
-    var d = new Date(year, mon);
-
-    var table = '<table><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
-
-    // заполнить первый ряд от понедельника
-    // и до дня, с которого начинается месяц
-    // * * * | 1  2  3  4
-    for (var i = 0; i < getDay(d); i++) {
-        table += '<td></td>';
+function monthToggleNext() {
+    if (btnNext.click) {
+        month = now.getMonth()+1;
+        createCalendar("calendar", year, month);
+        titleMonth.innerHTML = 'July';
     }
-
-    // ячейки календаря с датами
-    while (d.getMonth() == mon) {
-        table += '<td>' + d.getDate() + '</td>';
-
-        if (getDay(d) % 7 == 6) { // вс, последний день - перевод строки
-            table += '</tr><tr>';
-        }
-
-        d.setDate(d.getDate() + 1);
-    }
-
-    // добить таблицу пустыми ячейками, если нужно
-    if (getDay(d) != 0) {
-        for (var i = getDay(d); i < 7; i++) {
-            table += '<td></td>';
-        }
-    }
-
-    // закрыть таблицу
-    table += '</tr></table>';
-
-    // только одно присваивание innerHTML
-    elem.innerHTML = table;
 }
 
-function getDay(date) { // получить номер дня недели, от 0(пн) до 6(вс)
-    var day = date.getDay();
-    if (day == 0) day = 7;
-    return day - 1;
-}
+btnPrev.addEventListener('click', function() {
+    monthTogglePrev();
+});
 
-let now = new Date();
-let year = now.getFullYear();
+btnCurrent.addEventListener('click', function() {
+    monthToggleCurrent();
+});
 
-let monthPast = now.getMonth();
-let monthCurrent = now.getMonth()+1;
-let monthFuture = now.getMonth()+2;
+btnNext.addEventListener('click', function() {
+    monthToggleNext();
+});
 
-createCalendar_1("calendar_1", year, monthPast);
-createCalendar_2("calendar_2", year, monthCurrent);
-createCalendar_3("calendar_3", year, monthFuture);
+createCalendar("calendar", year, month);
